@@ -16,7 +16,8 @@ Checks index/sub-index ranges, container sub 0 bookkeeping, PDO comm/mapping
 pairing, dangling or oversized PDO mappings, and numeric default/limit
 consistency — including problems the GUI cannot detect.
 
-Exit status: 0 when clean, 3 when problems were found.
+Exit status: 0 when there are no errors (warnings alone still exit 0 unless
+--strict), 3 when errors were found.
 
 Examples:
   canopen validate device.eds
@@ -30,14 +31,14 @@ Examples:
             const errors = findings.filter((f) => f.level === 'error').length;
             const warnings = findings.length - errors;
             if (opts.json) {
-                emitJson({ ok: findings.length === 0, errors, warnings, findings });
+                emitJson({ ok: errors === 0, errors, warnings, findings });
             } else if (!findings.length) {
                 console.log('ok — no problems found');
             } else {
                 console.log(table(findings.map((f) => [f.level, f.ref ?? '-', f.message])));
                 console.log(`\n${errors} error(s), ${warnings} warning(s)`);
             }
-            if (findings.length) process.exit(3);
+            if (errors) process.exit(3);
         });
 }
 

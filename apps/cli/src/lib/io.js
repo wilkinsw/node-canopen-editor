@@ -38,7 +38,8 @@ function resolveFormat(path, override, role) {
     return detected;
 }
 
-async function readInput(path) {
+/** Read a file or stdin ('-') as UTF-8 text. */
+export async function readInput(path) {
     if (path === '-') {
         const chunks = [];
         for await (const chunk of process.stdin) chunks.push(chunk);

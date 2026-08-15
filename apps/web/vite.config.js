@@ -12,6 +12,6 @@ export default defineConfig({
     // package; pre-bundle them. Exclude the renderer itself so Vite serves its
     // source (JSX + CSS modules) through the normal plugin pipeline.
     include: ['canopen-eds', 'canopen-xdd'],
-    exclude: ['@canopen-editor/renderer'],
+    exclude: ['@canopen-editor/renderer', '@canopen-editor/core'],
   },
 })

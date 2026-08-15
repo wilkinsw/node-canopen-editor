@@ -1,8 +1,10 @@
-export { parseEds, serializeEds } from 'canopen-eds';
-export { Eds } from 'canopen-eds';
-export { parseXdd, serializeXdd as writeXdd } from 'canopen-xdd';
-export { exportOD } from 'canopen-xdd';
 export {
+    parseEds,
+    serializeEds,
+    Eds,
+    parseXdd,
+    serializeXdd as writeXdd,
+    exportOD,
     getPdoMappableObjects,
     parseMappingValue,
     buildMappingValue,
@@ -12,13 +14,6 @@ export {
     addNewPdo,
     deletePdo,
     getMappingBitUsage,
-} from 'canopen-eds';
-export {
-    computePdoSegments,
-    PDO_MAX_BITS,
-    SLOT_COLORS,
-} from './pdo-display.js';
-export {
     createEmptyEds,
     createVarEntry,
     createArrayEntry,
@@ -27,8 +22,6 @@ export {
     getCategoryForIndex,
     countRxTxPdo,
     CATEGORIES,
-} from 'canopen-eds';
-export {
     ObjectType,
     ObjectTypeName,
     AccessType,
@@ -39,4 +32,9 @@ export {
     isFloatType,
     isStringType,
     isContainerType,
-} from './types.js';
+} from '@canopen-editor/core';
+export {
+    computePdoSegments,
+    PDO_MAX_BITS,
+    SLOT_COLORS,
+} from './pdo-display.js';

@@ -54,7 +54,7 @@ export default defineConfig({
     optimizeDeps: {
       // See apps/web/vite.config.js — same workspace-source handling.
       include: ['canopen-eds', 'canopen-xdd'],
-      exclude: ['@canopen-editor/renderer'],
+      exclude: ['@canopen-editor/renderer', '@canopen-editor/core'],
     },
   },
 })

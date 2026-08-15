@@ -19,6 +19,7 @@
     "preview": "electron-vite preview"
   },
   "devDependencies": {
+    "@canopen-editor/core": "workspace:*",
     "@canopen-editor/renderer": "workspace:*",
     "@vitejs/plugin-react": "^5.2.0",
     "canopen-eds": "^0.5.0",

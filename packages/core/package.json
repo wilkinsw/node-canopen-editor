@@ -1,0 +1,16 @@
+{
+  "name": "@canopen-editor/core",
+  "version": "0.1.0",
+  "description": "Framework-free CANopen domain layer shared by the editor apps and CLI",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./types": "./src/types.js"
+  },
+  "dependencies": {
+    "canopen-eds": "^0.5.0",
+    "canopen-xdd": "^0.4.0"
+  }
+}

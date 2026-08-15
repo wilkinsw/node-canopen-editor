@@ -15,6 +15,7 @@ import registerExportC from './commands/export-c.js';
 import registerDevice from './commands/device.js';
 import registerObject from './commands/object.js';
 import registerSub from './commands/sub.js';
+import registerPdo from './commands/pdo.js';
 
 const require = createRequire(import.meta.url);
 const { version, description } = require('../package.json');
@@ -47,6 +48,7 @@ const registrars = [
     registerDevice,
     registerObject,
     registerSub,
+    registerPdo,
 ];
 for (const mod of registrars) mod(program);
 

@@ -11,6 +11,8 @@
     "build": "turbo run build",
     "build:web": "pnpm --filter @canopen-editor/web build",
     "build:desktop": "pnpm --filter @canopen-editor/desktop build",
+    "build:cli": "pnpm --filter @canopen-editor/cli build",
+    "canopen": "node apps/cli/bin/canopen.js",
     "lint": "eslint .",
     "preview": "pnpm --filter @canopen-editor/web preview"
   },

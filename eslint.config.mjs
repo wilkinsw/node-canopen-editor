@@ -9,7 +9,7 @@ export default defineConfig([
   // Renderer / browser code (React)
   {
     files: ['**/*.{js,jsx}'],
-    ignores: ['apps/desktop/electron/**'],
+    ignores: ['apps/desktop/electron/**', 'apps/cli/**'],
     extends: [
       js.configs.recommended,
       reactHooks.configs.flat.recommended,
@@ -20,11 +20,12 @@ export default defineConfig([
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
   },
-  // Node-context files: build configs + Electron main / preload
+  // Node-context files: build configs + Electron main / preload + CLI
   {
     files: [
       '**/*.config.{js,mjs,cjs}',
       'apps/desktop/electron/**/*.{js,cjs,mjs}',
+      'apps/cli/**/*.{js,cjs,mjs}',
     ],
     extends: [js.configs.recommended],
     languageOptions: {

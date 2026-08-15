@@ -6,27 +6,32 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 An editor for CANopen device description files. It parses, edits, and exports object
 dictionaries in EDS, XDD, and CANopenNode (`OD.h`/`OD.c`) formats. The same React renderer
-ships two ways:
+ships two ways, plus a scriptable CLI:
 
 - **Web** (`apps/web`) — client-side SPA deployed as a static site to GitHub Pages.
 - **Desktop** (`apps/desktop`) — Electron app with native open/save dialogs and inline
   save-in-place.
+- **CLI** (`apps/cli`) — the `canopen` binary; full feature parity with the GUI
+  (device metadata, object/sub-object CRUD, PDO mapping, convert/export) plus
+  `--json` output and a `validate` command.
 
 ## Monorepo layout
 
-pnpm workspaces + Turborepo. Three workspace projects:
+pnpm workspaces + Turborepo. Five workspace projects:
 
 ```
+packages/core       # @canopen-editor/core — framework-free domain barrel + type helpers
 packages/renderer   # @canopen-editor/renderer — all React UI + lib/eds (the shared renderer)
 apps/web            # @canopen-editor/web — thin Vite app, GitHub Pages target
 apps/desktop        # @canopen-editor/desktop — Electron app (electron-vite + electron-builder)
+apps/cli            # @canopen-editor/cli — `canopen` binary (commander, plain Node, no bundler)
 ```
 
-`packages/renderer` is consumed **as source** (its `package.json` `exports` points at
-`src/`); each app's Vite build transpiles it. That's why both apps keep
-`optimizeDeps: { include: ['canopen-eds','canopen-xdd'], exclude: ['@canopen-editor/renderer'] }`
-— pre-bundle the leaf domain deps, but let the renderer flow through the normal plugin
-pipeline (JSX + CSS Modules).
+`packages/renderer` and `packages/core` are consumed **as source** (their `package.json`
+`exports` point at `src/`); each app's Vite build transpiles them. That's why both GUI apps
+keep `optimizeDeps: { include: ['canopen-eds','canopen-xdd'], exclude:
+['@canopen-editor/renderer','@canopen-editor/core'] }` — pre-bundle the leaf domain deps,
+but let the workspace packages flow through the normal plugin pipeline (JSX + CSS Modules).
 
 ## Commands
 
@@ -39,6 +44,8 @@ pnpm dev:desktop              # Electron app in dev (renderer HMR + main auto-re
 pnpm build                    # turbo: build every workspace
 pnpm build:web                # web production build → apps/web/dist
 pnpm build:desktop            # electron-vite build + electron-builder → apps/desktop/release
+pnpm build:cli                # generate the CLI manpage (marked-man → apps/cli/man/canopen.1)
+pnpm canopen -- <args>        # run the CLI from the repo root (no build step needed)
 pnpm --filter @canopen-editor/desktop compile   # build main/preload/renderer only (no packaging)
 pnpm lint                     # eslint over the whole repo (single root flat config)
 pnpm preview                  # serve the web production build
@@ -58,11 +65,29 @@ Single page (`EditorPage`); `App.jsx` renders it directly, no router.
 ### Domain logic lives in external packages, re-exported through one barrel
 
 All CANopen parsing/serialization/PDO logic comes from the `canopen-eds` and `canopen-xdd`
-dependencies. **`packages/renderer/src/lib/eds/index.js` is the single barrel** that
-re-exports them plus the editor-only helpers in `types.js` (enum name maps, `dataTypeSize`,
-`isIntegerType`/`isFloatType`/`isStringType`/`isContainerType`) and `pdo-display.js` (UI-only
-PDO bit-map rendering). Import domain functions from `lib/eds/index.js`, never from the npm
-packages directly — and check for an existing export there before writing new CANopen logic.
+dependencies (pure-JS CommonJS). **`packages/core/src/index.js` is the domain barrel**: it
+re-exports their full API (via default-import + destructure, the CJS↔ESM interop pattern
+that works in both plain Node and Vite) plus the shared helpers in `core/src/types.js`
+(enum name maps, `dataTypeSize`, `isIntegerType`/`isFloatType`/`isStringType`/
+`isContainerType`). The renderer's `packages/renderer/src/lib/eds/index.js` re-exports the
+core barrel (with the `serializeXdd as writeXdd` alias) plus the UI-only `pdo-display.js`.
+Renderer code imports from `lib/eds/index.js`; the CLI imports from `@canopen-editor/core`;
+neither imports the npm packages directly — and check for an existing export before writing
+new CANopen logic.
+
+### CLI (`apps/cli`)
+
+Plain Node ESM, no bundler; `commander` is the only runtime dep besides core. Layout:
+`src/index.js` assembles the program; `src/commands/*.js` are file-per-noun modules
+(`object`, `sub`, `pdo`, `device`, plus `new`/`info`/`convert`/`export-c`/`validate`/`docs`);
+`src/lib/` holds the read-modify-write pipeline (`io.js`), arg parsing (`parse.js`), output
+formatting (`format.js`), entry/sub0 editing (`edit.js`), PDO mutations with loud capacity
+errors (`pdo-edit.js`), and `validate` rules (`validate-model.js`). Exit codes: 0 ok,
+1 domain error, 2 usage, 3 validate errors. Mutating commands edit in place; `-o` redirects
+(and converts by extension); `-` + `--format` does stdin/stdout. `object copy`/`paste` use
+the same clipboard-envelope JSON as the GUI (`lib/clipboard.js` schema, duplicated
+deliberately in `apps/cli/src/lib/edit.js`). The manpage source is `apps/cli/man/canopen.1.md`
+(printed by `canopen docs`); `pnpm build:cli` generates troff via marked-man.
 
 ### State model
 

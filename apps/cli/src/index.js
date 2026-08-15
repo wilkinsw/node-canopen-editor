@@ -17,6 +17,7 @@ import registerObject from './commands/object.js';
 import registerSub from './commands/sub.js';
 import registerPdo from './commands/pdo.js';
 import registerValidate from './commands/validate.js';
+import registerDocs from './commands/docs.js';
 
 const require = createRequire(import.meta.url);
 const { version, description } = require('../package.json');
@@ -51,6 +52,7 @@ const registrars = [
     registerSub,
     registerPdo,
     registerValidate,
+    registerDocs,
 ];
 for (const mod of registrars) mod(program);
 

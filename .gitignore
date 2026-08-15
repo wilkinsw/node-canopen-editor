@@ -5,6 +5,7 @@ node_modules
 dist
 out
 .turbo
+apps/cli/man/canopen.1
 
 # Electron packaging output
 release

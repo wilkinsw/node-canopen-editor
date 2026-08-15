@@ -227,8 +227,8 @@ Examples:
             .option('--at <slot>', 'insert at this 1-based slot instead of appending')
     )
         .addHelpText('after', `
-Targets must have pdoMapping=true and a fixed-size data type. Exceeds of the
-64-bit / 8-slot PDO capacity are errors.
+Targets must have pdoMapping=true and a fixed-size data type. Exceeding the
+64-bit / 8-slot PDO capacity is an error.
 
 Examples:
   canopen pdo map device.eds tx 1 0x2000.1 0x2000.2

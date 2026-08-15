@@ -1,0 +1,32 @@
+{
+  "name": "@canopen-editor/cli",
+  "version": "0.1.0",
+  "description": "Command-line editor for CANopen EDS/XDD device descriptions",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "canopen": "./bin/canopen.js"
+  },
+  "man": [
+    "./man/canopen.1"
+  ],
+  "files": [
+    "bin",
+    "src",
+    "man/canopen.1"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "marked-man man/canopen.1.md > man/canopen.1",
+    "dev": "node bin/canopen.js"
+  },
+  "dependencies": {
+    "@canopen-editor/core": "workspace:*",
+    "commander": "^14.0.0"
+  },
+  "devDependencies": {
+    "marked-man": "^2.1.0"
+  }
+}

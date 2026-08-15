@@ -8,6 +8,10 @@
 import { createRequire } from 'node:module';
 import { Command } from 'commander';
 import { CliError, fail } from './lib/errors.js';
+import registerNew from './commands/new.js';
+import registerInfo from './commands/info.js';
+import registerConvert from './commands/convert.js';
+import registerExportC from './commands/export-c.js';
 
 const require = createRequire(import.meta.url);
 const { version, description } = require('../package.json');
@@ -32,7 +36,12 @@ Examples:
 program.exitOverride();
 program.configureOutput({ outputError: (str) => process.stderr.write(str) });
 
-const registrars = [];
+const registrars = [
+    registerNew,
+    registerInfo,
+    registerConvert,
+    registerExportC,
+];
 for (const mod of registrars) mod(program);
 
 try {

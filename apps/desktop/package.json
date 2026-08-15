@@ -13,8 +13,9 @@
   "desktopName": "com.daxbot.canopen-editor.desktop",
   "scripts": {
     "dev": "electron-vite dev",
-    "build": "electron-vite build && electron-builder",
-    "build:unpack": "electron-vite build && electron-builder --dir",
+    "bundle-cli": "node scripts/bundle-cli.mjs",
+    "build": "electron-vite build && node scripts/bundle-cli.mjs && electron-builder",
+    "build:unpack": "electron-vite build && node scripts/bundle-cli.mjs && electron-builder --dir",
     "compile": "electron-vite build",
     "preview": "electron-vite preview"
   },
@@ -26,6 +27,7 @@
     "canopen-xdd": "^0.4.0",
     "electron": "^42.5.0",
     "electron-builder": "^26.15.3",
+    "esbuild": "^0.27.7",
     "electron-vite": "^5.0.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",

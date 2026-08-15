@@ -14,6 +14,17 @@ files:
   - out/**
   - package.json
 
+# Self-contained `canopen` CLI bundle produced by scripts/bundle-cli.mjs
+# (runs before electron-builder in the build script). Shipped on every
+# platform; the Linux deb additionally installs /usr/bin/canopen + manpage
+# (see the deb.fpm mappings below).
+extraResources:
+  - from: dist/cli
+    to: cli
+    filter:
+      - canopen.mjs
+      - canopen.1.md
+
 linux:
   target:
     - AppImage
@@ -24,6 +35,13 @@ linux:
   # Match the WM_CLASS to the .desktop entry (name set in package.json) so window
   # managers (and Flatpak) associate running windows with the installed launcher.
   syncDesktopName: true
+
+deb:
+  # Extra file mappings (fpm src=dest): install the CLI wrapper (which runs
+  # the bundled CLI on the app's own Electron in Node mode) and the manpage.
+  fpm:
+    - dist/cli/canopen=/usr/bin/canopen
+    - dist/cli/canopen.1.gz=/usr/share/man/man1/canopen.1.gz
 
 # Flatpak bundle (.flatpak). Requires flatpak-builder plus the runtime, SDK and
 # Electron base app installed for the version pinned below:

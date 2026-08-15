@@ -12,6 +12,7 @@ import registerNew from './commands/new.js';
 import registerInfo from './commands/info.js';
 import registerConvert from './commands/convert.js';
 import registerExportC from './commands/export-c.js';
+import registerDevice from './commands/device.js';
 
 const require = createRequire(import.meta.url);
 const { version, description } = require('../package.json');
@@ -41,6 +42,7 @@ const registrars = [
     registerInfo,
     registerConvert,
     registerExportC,
+    registerDevice,
 ];
 for (const mod of registrars) mod(program);
 

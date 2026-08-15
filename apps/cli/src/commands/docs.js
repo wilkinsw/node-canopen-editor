@@ -1,12 +1,27 @@
 import { readFile } from 'node:fs/promises';
+import { CliError } from '../lib/errors.js';
+
+// Repo layout first; bundled builds ship the manual next to the script.
+const CANDIDATES = [
+    '../../man/canopen.1.md',
+    './canopen.1.md',
+];
 
 function register(program) {
     program
         .command('docs')
         .description('print the full manual (markdown) to stdout')
         .action(async () => {
-            const url = new URL('../../man/canopen.1.md', import.meta.url);
-            process.stdout.write(await readFile(url, 'utf8'));
+            for (const candidate of CANDIDATES) {
+                try {
+                    const text = await readFile(new URL(candidate, import.meta.url), 'utf8');
+                    process.stdout.write(text);
+                    return;
+                } catch {
+                    // try the next location
+                }
+            }
+            throw new CliError('manual file not found');
         });
 }
 

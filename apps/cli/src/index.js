@@ -19,8 +19,19 @@ import registerPdo from './commands/pdo.js';
 import registerValidate from './commands/validate.js';
 import registerDocs from './commands/docs.js';
 
-const require = createRequire(import.meta.url);
-const { version, description } = require('../package.json');
+function pkgMeta() {
+    try {
+        const require = createRequire(import.meta.url);
+        return require('../package.json');
+    } catch {
+        // Bundled build (no package.json on disk); version injected at bundle time.
+        return {
+            version: process.env.CANOPEN_CLI_VERSION ?? '0.0.0',
+            description: 'Command-line editor for CANopen EDS/XDD device descriptions',
+        };
+    }
+}
+const { version, description } = pkgMeta();
 
 const program = new Command();
 

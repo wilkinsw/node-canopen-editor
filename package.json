@@ -24,13 +24,6 @@
     "globals": "^17.6.0",
     "turbo": "^2.5.8"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "electron",
-      "electron-builder",
-      "esbuild"
-    ]
-  },
   "keywords": [
     "canopen"
   ],

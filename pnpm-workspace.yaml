@@ -1,3 +1,9 @@
 packages:
   - 'apps/*'
   - 'packages/*'
+
+# pnpm 10 reads this from here, not from package.json#pnpm.
+onlyBuiltDependencies:
+  - electron
+  - electron-builder
+  - esbuild
